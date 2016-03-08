@@ -41,14 +41,10 @@ var moveBall = function(){
       	vimg.appendChild(ball);
 
 
-      	if (currentX == 0)
-      	    deltaX = 1;
-      	else if (currentX == parseInt(vimg.getAttribute("width")))
-      	    deltaX = -1;
-      	else if (currentY == 0)
-      	    deltaY = 1;
-      	else if (currentY == parseInt(vimg.getAttribute("height")))
-      	    deltaY = -1;
+      	if (currentX == 0 || currentX == parseInt(vimg.getAttribute("width")) - parseInt(ball.getAttribute("width")))
+      	    deltaX *= -1;
+      	else if (currentY == 0 || currentY == parseInt(vimg.getAttribute("height")) - parseInt(ball.getAttribute("height")))
+      	    deltaY *= -1;
 
 
       	currentX += deltaX;
