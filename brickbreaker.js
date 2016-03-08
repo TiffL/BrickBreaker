@@ -25,39 +25,29 @@ var startGame = function(){
     }
     xVal = paddle.getAttribute("x");
   }, true);
-
+    moveBall();
 };
 
-
-//to change to circle
-var circle = function(){
-    var currentX  = (picWidth-logoWidth)/2;
-    var currentY  = (picHeight-logoHeight)/2;
+var moveBall = function(){
+    var currentX  = parseInt(ball.getAttribute("x"));
+    var currentY  = parseInt(ball.getAttribute("y"));
     var deltaX = 1;
     var deltaY = 1;
 
 
     var bounce = function(){
-      while (pic.childElementCount > 0){
-      	    pic.removeChild(pic.children[0]);
-      	}
-
-
-      	var logo = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      	logo.setAttribute("x",currentX);
-      	logo.setAttribute("y",currentY);
-      	logo.setAttribute("width",logoWidth);
-      	logo.setAttribute("height",logoHeight);
-      	pic.appendChild(logo);
+      	ball.setAttribute("x",currentX);
+      	ball.setAttribute("y",currentY);
+      	vimg.appendChild(ball);
 
 
       	if (currentX == 0)
       	    deltaX = 1;
-      	else if (currentX == picWidth-logoWidth)
+      	else if (currentX == parseInt(vimg.getAttribute("width")))
       	    deltaX = -1;
       	else if (currentY == 0)
       	    deltaY = 1;
-      	else if (currentY == picHeight-logoHeight)
+      	else if (currentY == parseInt(vimg.getAttribute("height")))
       	    deltaY = -1;
 
 
