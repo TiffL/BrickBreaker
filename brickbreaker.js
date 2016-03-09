@@ -64,8 +64,10 @@ var moveBall = function(){
 
         //bounce off pad
         //else if ((currentX == parseInt(paddle.getAttribute("x"))-50 || currentX == parseInt(paddle.getAttribute("x"))+50) && currentY == parseInt(paddle.getAttribute("y")-50))
-        else if (svgimg.checkIntersection(ball, pad))
-            deltaY = -1;
+        //else if (svgimg.checkIntersection(ball, pad))
+            //deltaY = -1;
+        else if (intersectRect(ball,paddle))
+        	deltaY = -1;    
 
       	currentX += deltaX;
       	currentY += deltaY;
@@ -76,3 +78,15 @@ var moveBall = function(){
 
 var startButton = document.getElementById("start");
 startButton.addEventListener("click",startGame);
+
+//////TESTING TESTING
+function intersectRect(r1, r2) {
+    var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
+    var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
+ 
+    //CHECK IF THE TWO BOUNDING BOXES OVERLAP
+  return !(r2.left > r1.right || 
+           r2.right < r1.left || 
+           r2.top > r1.bottom ||
+           r2.bottom < r1.top);
+}
