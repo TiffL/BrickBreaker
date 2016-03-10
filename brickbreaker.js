@@ -39,15 +39,15 @@ var brickSetup = function(){
     var vimgWidth = parseInt(vimg.getAttribute("width"));
     var bricksLeft = numBricks;
     while (bricksLeft > 0){
-	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
-	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
-	brick.setAttribute("y",0);
-	brick.setAttribute("width",vimgWidth/numBricks);
-	brick.setAttribute("height",25);
-	brick.setAttribute("fill","red");
-	brick.setAttribute("stroke","black");
-	vimg.appendChild(brick);
-	bricksLeft -= 1;
+    	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
+    	brick.setAttribute("y",0);
+    	brick.setAttribute("width",vimgWidth/numBricks);
+    	brick.setAttribute("height",25);
+    	brick.setAttribute("fill","red");
+    	brick.setAttribute("stroke","black");
+    	vimg.appendChild(brick);
+    	bricksLeft -= 1;
     }
 }
 brickSetup();
@@ -81,9 +81,6 @@ var moveBall = function(){
 
 
         //bounce off pad
-        //else if ((currentX == parseInt(paddle.getAttribute("x"))-50 || currentX == parseInt(paddle.getAttribute("x"))+50) && currentY == parseInt(paddle.getAttribute("y")-50))
-        //else if (svgimg.checkIntersection(ball, pad))
-            //deltaY = -1;
         else if (intersectRect(ball,paddle))
         	deltaY = -1;    
 
@@ -99,8 +96,8 @@ startButton.addEventListener("click",startGame);
 
 //////TESTING TESTING
 function intersectRect(r1, r2) {
-    var r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
-    var r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
+    r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
+    r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
  
     //CHECK IF THE TWO BOUNDING BOXES OVERLAP
   return !(r2.left > r1.right || 
@@ -108,3 +105,19 @@ function intersectRect(r1, r2) {
            r2.top > r1.bottom ||
            r2.bottom < r1.top);
 }
+
+function whichSide(brick, ball){//if 0 don't do anything, if 1 invert the ball's x movement, else invert ball's y movement
+    if (!intersectRect(brick, ball)){
+        return 0;
+    }
+    var r1 = brick.getBoundingClientRect();
+    var r2 = ball.getBoundingClientRect();
+    if (r1.left > r2.right || r1.left < r2.right){
+        return 1;
+    }else{
+        return 2;
+    }
+}
+//go through all of the brick elements
+//If whichside returns something other than 0, stop checking and tell that element to delete itself
+//If the ball is below a specific Y coordinate, don't even bother running the brick check
