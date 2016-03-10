@@ -34,6 +34,24 @@ var startGame = function(){
     moveBall();
 };
 
+var numBricks = 10;  //total number of bricks in row
+var brickSetup = function(){
+    var vimgWidth = parseInt(vimg.getAttribute("width"));
+    var bricksLeft = numBricks;
+    while (bricksLeft > 0){
+	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
+	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
+	brick.setAttribute("y",0);
+	brick.setAttribute("width",vimgWidth/numBricks);
+	brick.setAttribute("height",25);
+	brick.setAttribute("fill","red");
+	brick.setAttribute("stroke","black");
+	vimg.appendChild(brick);
+	bricksLeft -= 1;
+    }
+}
+brickSetup();
+
 var moveBall = function(){
     var currentX  = parseInt(ball.getAttribute("x"));
     var currentY  = parseInt(ball.getAttribute("y"));
