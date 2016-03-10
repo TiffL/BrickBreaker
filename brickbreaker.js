@@ -2,12 +2,6 @@ var vimg = document.getElementById("svgimg");
 var paddle = document.getElementById('paddle');
 var ball = document.getElementById('ball');
 
-var pad = svgimg.createSVGRect();
-pad.x=375;
-pad.y=415;
-pad.width=85;
-pad.height=16;
-
 
 var xVal= paddle.getAttribute("x");
 
@@ -16,14 +10,12 @@ var startGame = function(){
     switch(e.keyCode) {
       case 37: //left
         paddle.setAttribute("x",parseInt(xVal)-5);
-        pad.x-=5;
         if (xVal <= 0) {
           paddle.setAttribute("x","0");
         }
         break;
       case 39: //right
         paddle.setAttribute("x",parseInt(xVal)+5);
-        pad.x+=5;
         if (xVal >= 705) {
           paddle.setAttribute("x","705");
         }
@@ -64,11 +56,6 @@ var moveBall = function(){
       	ball.setAttribute("y",currentY);
       	vimg.appendChild(ball);
 
-      	/*if (currentX == 0 || currentX == parseInt(vimg.getAttribute("width")) - parseInt(ball.getAttribute("width")))
-      	    deltaX *= -1;
-      	else if (currentY == 0 || currentY == parseInt(vimg.getAttribute("height")) - parseInt(ball.getAttribute("height")))
-      	    deltaY *= -1;*/
-
         //bounce off walls
       	if (currentX == 0)
       	    deltaX = 1;
@@ -79,10 +66,24 @@ var moveBall = function(){
       	else if (currentY == parseInt(vimg.getAttribute("height"))-20)
       	    window.alert("DEAD (shocker)");
 
-
         //bounce off pad
         else if (intersectRect(ball,paddle))
-        	deltaY = -1;    
+        	deltaY = -1;  
+
+        //Brick Bouncing
+        var bricks = document.getElementsByTagName("rect");
+        for (i = 0; i<bricks.length; i++){
+        	if (whichSide(bricks[i], ball) == 1){
+        		deltaX*=-1;
+        		bricks[i].parentNode.removeChild(bricks[i]);
+        		break;
+        	}else if (whichSide(bricks[i], ball) == 2){
+        		deltaY*=-1;
+        		bricks[i].parentNode.removeChild(bricks[i]);
+        		break;        		
+        	}
+        }
+        //Still testing
 
       	currentX += deltaX;
       	currentY += deltaY;
@@ -94,7 +95,7 @@ var moveBall = function(){
 var startButton = document.getElementById("start");
 startButton.addEventListener("click",startGame);
 
-//////TESTING TESTING
+
 function intersectRect(r1, r2) {
     r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
     r2 = r2.getBoundingClientRect();    //BOUNDING BOX OF THE SECOND OBJECT
