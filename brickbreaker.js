@@ -27,21 +27,27 @@ var startGame = function(){
 };
 
 var numBricks = 10;  //total number of bricks in row
+var numRows = 6;
 var brickSetup = function(){
     var vimgWidth = parseInt(vimg.getAttribute("width"));
-    var bricksLeft = numBricks;
-    while (bricksLeft > 0){
-    	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
-    	brick.setAttribute("y",0);
-    	brick.setAttribute("width",vimgWidth/numBricks);
-    	brick.setAttribute("height",25);
-    	brick.setAttribute("fill","red");
-    	brick.setAttribute("stroke","black");
-    	vimg.appendChild(brick);
-    	bricksLeft -= 1;
+    var rowsLeft = numRows;
+    while (rowsLeft > 0){
+	var bricksLeft = numBricks;
+	while (bricksLeft > 0){
+    	    var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    	    brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
+    	    brick.setAttribute("y",(numRows-rowsLeft)*25);
+	    brick.setAttribute("rx",8);
+    	    brick.setAttribute("width",vimgWidth/numBricks);
+    	    brick.setAttribute("height",25);
+    	    brick.setAttribute("fill","red");
+    	    brick.setAttribute("stroke","black");
+    	    vimg.appendChild(brick);
+    	    bricksLeft -= 1;
+	}
+	rowsLeft -= 1;
     }
-}
+};
 brickSetup();
 
 var moveBall = function(){
