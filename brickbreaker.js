@@ -79,9 +79,9 @@ var moveBall = function(){
       	else if (currentY == 0)
       	    deltaY *= -1;
       	else if (currentY == parseInt(vimg.getAttribute("height"))-20){
-	    clearInterval(id);
+	    	clearInterval(id);
       	    window.alert("DEAD (shocker) \n Score:" + score);
-	}
+		}
 
         //bounce off pad
         else if (intersectRect(ball,paddle))
@@ -91,13 +91,13 @@ var moveBall = function(){
         var bricks = document.getElementsByTagName("rect");
         for (i = 0; i<bricks.length; i++){
         	if (whichSide(bricks[i], ball) == 1){
-        		deltaX*=-1;
+        		deltaY*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
         		score += 10;
 		        onScreenBricks -= 1;
         		break;
         	}else if (whichSide(bricks[i], ball) == 2){
-        		deltaY*=-1;
+        		deltaX*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
         		score += 10;
 		        onScreenBricks -= 1;
