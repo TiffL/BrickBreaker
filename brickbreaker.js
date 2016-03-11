@@ -1,9 +1,11 @@
 var vimg = document.getElementById("svgimg");
 var paddle = document.getElementById('paddle');
 var ball = document.getElementById('ball');
+var score = 0;
 
 
 var xVal= paddle.getAttribute("x");
+var yVal = paddle.getAttribute("y");
 
 var startGame = function(){
   window.addEventListener('keydown', function (e) {
@@ -16,8 +18,8 @@ var startGame = function(){
         break;
       case 39: //right
         paddle.setAttribute("x",parseInt(xVal)+10);
-        if (xVal >= 705) {
-          paddle.setAttribute("x","705");
+        if (xVal >= 715) {
+          paddle.setAttribute("x","715");
         }
         break;
     }
@@ -27,24 +29,29 @@ var startGame = function(){
 };
 
 var numBricks = 10;  //total number of bricks in row
-var brickSetup = function(y){
+var numRows = 6;
+var brickSetup = function(){
     var vimgWidth = parseInt(vimg.getAttribute("width"));
-    var bricksLeft = numBricks;
-    while (bricksLeft > 0){
-    	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
-    	brick.setAttribute("y",y);
-    	brick.setAttribute("width",vimgWidth/numBricks);
-    	brick.setAttribute("height",25);
-    	brick.setAttribute("fill","red");
-    	brick.setAttribute("stroke","black");
-    	vimg.appendChild(brick);
-    	bricksLeft -= 1;
+    var rowsLeft = numRows;
+    while (rowsLeft > 0){
+	var bricksLeft = numBricks;
+	while (bricksLeft > 0){
+    	    var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    	    brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
+    	    brick.setAttribute("y",(numRows-rowsLeft)*25);
+	    	brick.setAttribute("rx",8);
+    	    brick.setAttribute("width",vimgWidth/numBricks);
+    	    brick.setAttribute("height",25);
+    	    brick.setAttribute("fill","red");
+    	    brick.setAttribute("stroke","black");
+    	    vimg.appendChild(brick);
+    	    bricksLeft -= 1;
+	}
+	rowsLeft -= 1;
     }
-}
-brickSetup(0);
-brickSetup(25);
-brickSetup(50);
+};
+brickSetup();
+
 
 var moveBall = function(){
     var currentX  = parseInt(ball.getAttribute("x"));
@@ -60,17 +67,17 @@ var moveBall = function(){
 
         //bounce off walls
       	if (currentX == 0)
-      	    deltaX = 1;
+      	    deltaX *= -1;
       	else if (currentX == parseInt(vimg.getAttribute("width"))-20)
-      	    deltaX = -1;
+      	    deltaX *= -1;
       	else if (currentY == 0)
-      	    deltaY = 1;
+      	    deltaY *= -1;
       	else if (currentY == parseInt(vimg.getAttribute("height"))-20)
       	    window.alert("DEAD (shocker)");
 
         //bounce off pad
         else if (intersectRect(ball,paddle))
-        	deltaY = -1;  
+        	deltaY *= -1;  
 
         //Brick Bouncing
         var bricks = document.getElementsByTagName("rect");
@@ -78,10 +85,12 @@ var moveBall = function(){
         	if (whichSide(bricks[i], ball) == 1){
         		deltaX*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
+        		score += 10;
         		break;
         	}else if (whichSide(bricks[i], ball) == 2){
         		deltaY*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
+        		score += 10;
         		break;        		
         	}
         }
@@ -89,8 +98,8 @@ var moveBall = function(){
 
       	currentX += deltaX;
       	currentY += deltaY;
+      	document.getElementById("score").innerHTML = score;
     };
-
     id = window.setInterval(bounce,10);
 }
 
@@ -115,9 +124,9 @@ function whichSide(brick, ball){//if 0 don't do anything, if 1 invert the ball's
     }
     var r1 = brick.getBoundingClientRect();
     var r2 = ball.getBoundingClientRect();
-    if (r1.left > r2.right || r1.left < r2.right){
+    if (r1.right > r2.left || r1.left < r2.right){
         return 1;
-    }else{
+    }else if (r1.top > r2.bottom || r1.bottom < r2.top){
         return 2;
     }
 }
