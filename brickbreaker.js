@@ -9,13 +9,13 @@ var startGame = function(){
   window.addEventListener('keydown', function (e) {
     switch(e.keyCode) {
       case 37: //left
-        paddle.setAttribute("x",parseInt(xVal)-5);
+        paddle.setAttribute("x",parseInt(xVal)-10);
         if (xVal <= 0) {
           paddle.setAttribute("x","0");
         }
         break;
       case 39: //right
-        paddle.setAttribute("x",parseInt(xVal)+5);
+        paddle.setAttribute("x",parseInt(xVal)+10);
         if (xVal >= 705) {
           paddle.setAttribute("x","705");
         }
@@ -27,13 +27,13 @@ var startGame = function(){
 };
 
 var numBricks = 10;  //total number of bricks in row
-var brickSetup = function(){
+var brickSetup = function(y){
     var vimgWidth = parseInt(vimg.getAttribute("width"));
     var bricksLeft = numBricks;
     while (bricksLeft > 0){
     	var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
     	brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
-    	brick.setAttribute("y",0);
+    	brick.setAttribute("y",y);
     	brick.setAttribute("width",vimgWidth/numBricks);
     	brick.setAttribute("height",25);
     	brick.setAttribute("fill","red");
@@ -42,7 +42,9 @@ var brickSetup = function(){
     	bricksLeft -= 1;
     }
 }
-brickSetup();
+brickSetup(0);
+brickSetup(25);
+brickSetup(50);
 
 var moveBall = function(){
     var currentX  = parseInt(ball.getAttribute("x"));
