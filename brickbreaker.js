@@ -2,7 +2,7 @@ var vimg = document.getElementById("svgimg");
 var paddle = document.getElementById('paddle');
 var ball = document.getElementById('ball');
 var score = 0;
-
+var id;
 
 var xVal= paddle.getAttribute("x");
 var yVal = paddle.getAttribute("y");
@@ -30,6 +30,8 @@ var startGame = function(){
 
 var numBricks = 10;  //total number of bricks in row
 var numRows = 6;
+var onScreenBricks = numBricks*numRows; //total number of bricks on screen
+
 var brickSetup = function(){
     var vimgWidth = parseInt(vimg.getAttribute("width"));
     var rowsLeft = numRows;
@@ -37,10 +39,10 @@ var brickSetup = function(){
 	var bricksLeft = numBricks;
 	while (bricksLeft > 0){
     	    var brick = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    	    brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks));
-    	    brick.setAttribute("y",(numRows-rowsLeft)*25);
-	    	brick.setAttribute("rx",8);
-    	    brick.setAttribute("width",vimgWidth/numBricks);
+    	    brick.setAttribute("x",(numBricks-bricksLeft)*(vimgWidth/numBricks)+5);
+    	    brick.setAttribute("y",(numRows-rowsLeft)*30);
+	    brick.setAttribute("rx",8);
+    	    brick.setAttribute("width",(vimgWidth/numBricks)-10);
     	    brick.setAttribute("height",25);
     	    brick.setAttribute("fill","red");
     	    brick.setAttribute("stroke","black");
@@ -51,7 +53,6 @@ var brickSetup = function(){
     }
 };
 brickSetup();
-
 
 var moveBall = function(){
     var currentX  = parseInt(ball.getAttribute("x"));
@@ -65,6 +66,11 @@ var moveBall = function(){
       	ball.setAttribute("y",currentY);
       	vimg.appendChild(ball);
 
+	if (onScreenBricks == 0){
+	    clearInterval(id);
+	    window.alert("Yay! You've won! \n Your Score is:" + score);
+	}
+
         //bounce off walls
       	if (currentX == 0)
       	    deltaX *= -1;
@@ -72,8 +78,10 @@ var moveBall = function(){
       	    deltaX *= -1;
       	else if (currentY == 0)
       	    deltaY *= -1;
-      	else if (currentY == parseInt(vimg.getAttribute("height"))-20)
-      	    window.alert("DEAD (shocker)");
+      	else if (currentY == parseInt(vimg.getAttribute("height"))-20){
+	    clearInterval(id);
+      	    window.alert("DEAD (shocker) \n Score:" + score);
+	}
 
         //bounce off pad
         else if (intersectRect(ball,paddle))
@@ -86,11 +94,13 @@ var moveBall = function(){
         		deltaX*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
         		score += 10;
+		        onScreenBricks -= 1;
         		break;
         	}else if (whichSide(bricks[i], ball) == 2){
         		deltaY*=-1;
         		bricks[i].parentNode.removeChild(bricks[i]);
         		score += 10;
+		        onScreenBricks -= 1;
         		break;        		
         	}
         }
@@ -105,7 +115,6 @@ var moveBall = function(){
 
 var startButton = document.getElementById("start");
 startButton.addEventListener("click",startGame);
-
 
 function intersectRect(r1, r2) {
     r1 = r1.getBoundingClientRect();    //BOUNDING BOX OF THE FIRST OBJECT
